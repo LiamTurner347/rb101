@@ -1,6 +1,6 @@
 VALID_CHOICES = ["Rock", "Paper", "Scissors", "Lizard", "Spock"]
 WIN_RULES = {
-  Rock: ["Scissors, Lizard"],
+  Rock: ["Scissors", "Lizard"],
   Paper: ["Rock", "Spock"],
   Scissors: ["Paper", "Lizard"],
   Lizard: ["Spock", "Paper"],
@@ -96,11 +96,18 @@ def win_check?(player, computer)
 end
 
 def display_champ(player)
+  prompt("It's all over!")
   if player == 3
     prompt("You won - you are the champ!!")
   else
     prompt("You have been defeated by the computer")
   end
+end
+
+def play_again?
+  prompt("Do you want to play again? (press 'y' to play again)")
+  answer = gets.chomp
+  answer.downcase.start_with?("y")
 end
 
 prompt("Welcome to #{VALID_CHOICES.join(', ')}")
@@ -124,15 +131,14 @@ loop do
     display_scoreboard(player_score, computer_score)
 
     if win_check?(player_score, computer_score)
-      prompt("It's all over!")
-      display_champ(player_score, computer_score)
+      display_champ(player_score)
       break
     end
+
+    system "clear"
   end
 
-  prompt("Do you want to play again? (press 'y' to play again)")
-  answer = gets.chomp
-  break unless answer.downcase.start_with?("y")
+  break unless play_again?
 end
 
 prompt("Thank you for playing #{VALID_CHOICES.join(', ')}")
