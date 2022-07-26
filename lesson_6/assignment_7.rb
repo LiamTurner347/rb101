@@ -1,5 +1,3 @@
-require 'pry'
-
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
@@ -41,7 +39,7 @@ end
 def player_places_piece!(brd)
   square = ''
   loop do
-    prompt("Choose a square (#{joinor(empty_squares(brd))}:")
+    prompt("Choose a square (#{joinor(empty_squares(brd))}):")
     square = gets.chomp.to_i
     break if empty_squares(brd).include?(square)
 
@@ -67,10 +65,10 @@ def computer_places_piece!(brd)
   end
 
   if !square
-    if empty_squares(brd).include?(5)
-      square = 5
+    square = if empty_squares(brd).include?(5)
+      5
     else
-      square = empty_squares(brd).sample
+      empty_squares(brd).sample
     end
   end
 
@@ -81,8 +79,6 @@ end
 def optimal_square(line, brd, marker)
   if brd.values_at(*line).count(marker) == 2
     brd.select { |k, v| line.include?(k) && v == INITIAL_MARKER }.keys.first
-  else
-    nil
   end
 end
 
@@ -117,11 +113,11 @@ def joinor(brd, delimiter = ', ', word = 'or')
   end
 end
 
-# rubocop:disable Metrics/MethodLength
 def starting_player
   player = nil
   loop do
-    prompt('Who would you like to go first? (Player, P; Computer, C; Random, R)')
+    prompt('Who would you like to go first?')
+    prompt('(Player, P; Computer, C; Random, R)')
     player = gets.chomp
 
     if player.downcase.start_with?('p')
@@ -138,7 +134,6 @@ def starting_player
   end
   player
 end
-# rubocop:enable Metrics/MethodLength
 
 def place_piece!(brd, player)
   if player == 'Player'
@@ -168,6 +163,7 @@ def winner_to_five(scr)
 end
 
 def greeting
+  system 'clear'
   prompt('Welcome to Tic Tac Toe!')
   prompt('Take turns placing symbols in a 3x3 grid')
   prompt('Get three in a row to win the match!')
@@ -192,7 +188,11 @@ loop do
 
   if someone_won_round?(board)
     prompt("#{detect_winner(board)} won this game!")
-    detect_winner(board) == 'Player' ? score[:player] += 1 : score[:computer] += 1
+    if detect_winner(board) == 'Player' 
+      score[:player] += 1 
+    else
+      score[:computer] += 1
+    end
   else
     prompt("It's a tie!")
   end
